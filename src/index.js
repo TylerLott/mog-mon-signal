@@ -3,7 +3,7 @@ import { promisify } from "util"
 import redis from "redis"
 import mongoose from "mongoose"
 
-const PORT = 80
+const PORT = 8080
 const REDIS_HOST = ""
 const REDIS_PORT = 6379
 const MONGO_URL_PRIMARY = ""
