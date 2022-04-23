@@ -10,7 +10,7 @@ let MONGO_URL_REPL = ""
 
 if (process.env.NODE_ENV !== "production") {
   PORT = 8080
-  REDIS_PATH = "redis://44.204.86.55:6379"
+  REDIS_PATH = "redis://34.228.17.8:6379"
   MONGO_URL_PRIMARY = "mongodb://3.82.232.239:27017/monday"
   MONGO_URL_REPL = "mongodb://3.82.232.239:27018/monday"
 }
@@ -89,6 +89,14 @@ const SETTINGS_REPL = repl.model(
   // connect
   await redisPub.connect()
   await redisSub.connect()
+
+  // send all current team/player/settings
+  TEAM_REPL.find().then((data) => {
+    redisPub.set("teams", JSON.stringify(data)).then(() => {
+      redisPub.publish("teams", JSON.stringify(data))
+    })
+  })
+
   await redisSub.subscribe("team-timeouts", (message, chan) => {
     // publish viewer-event in mongo
     let mes = JSON.parse(message)
@@ -116,38 +124,34 @@ const SETTINGS_REPL = repl.model(
   // Mongo
   // track the teams
   TEAM_REPL.watch().on("change", async (data) => {
-    console.log("teams", data)
     if (typeof data === "string" || data instanceof String) {
       console.log("teams change", data)
     } else {
       // set redis settings
-      await redisPub.set("teams", JSON.stringify(data.fullDocument))
-      redisPub.publish("teams", JSON.stringify(data.fullDocument))
+      TEAM_REPL.find().then((data) => {
+        redisPub.set("teams", JSON.stringify(data)).then(() => {
+          redisPub.publish("teams", JSON.stringify(data))
+        })
+      })
       // publish settings to the settings channel
-      console.log("changing players", data)
     }
   })
   // track the players
   PLAYER_REPL.watch().on("change", async (data) => {
-    console.log("players", data)
     if (typeof data === "string" || data instanceof String) {
       console.log("players change", data)
     } else {
       // set redis settings
-      let plays = PLAYER_REPL.find({ active: true, type: "player" }).then(
-        (users) => {
-          console.log("setting redis", users)
-          redisPub.set("players", JSON.stringify(users)).then(() => {
-            redisPub.publish("players", JSON.stringify(users))
-          })
-          // publish settings to the settings channel
-        }
-      )
+      PLAYER_REPL.find({ active: true, type: "player" }).then((users) => {
+        redisPub.set("players", JSON.stringify(users)).then(() => {
+          redisPub.publish("players", JSON.stringify(users))
+        })
+        // publish settings to the settings channel
+      })
     }
   })
   // track the settings
   SETTINGS_REPL.watch().on("change", async (data) => {
-    console.log("settings", data)
     if (data && data.operationType === "insert") {
       if (typeof data === "string" || data instanceof String) {
         console.log("settings change", data)
