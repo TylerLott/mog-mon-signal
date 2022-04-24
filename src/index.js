@@ -96,6 +96,16 @@ const SETTINGS_REPL = repl.model(
       redisPub.publish("teams", JSON.stringify(data))
     })
   })
+  PLAYER_REPL.find({ active: true }).then((data) => {
+    redisPub.set("players", JSON.stringify(data)).then(() => {
+      redisPub.publish("players", JSON.stringify(data))
+    })
+  })
+  SETTINGS_REPL.findOne().then((data) => {
+    redisPub.set("settins", JSON.stringify(data)).then(() => {
+      redisPub.publish("settings", JSON.stringify(data))
+    })
+  })
 
   await redisSub.subscribe("team-timeouts", (message, chan) => {
     // publish viewer-event in mongo
