@@ -4,9 +4,9 @@ import redis from "redis"
 import mongoose from "mongoose"
 
 let PORT = 80
-let REDIS_PATH = ""
-let MONGO_URL_PRIMARY = ""
-let MONGO_URL_REPL = ""
+let REDIS_PATH = "redis://34.228.17.8:6379"
+let MONGO_URL_PRIMARY = "mongodb://172.31.91.101:27017/monday"
+let MONGO_URL_REPL = "mongodb://172.31.91.101:27018/monday"
 
 if (process.env.NODE_ENV !== "production") {
   PORT = 8080
