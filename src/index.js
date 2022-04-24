@@ -25,10 +25,14 @@ let repl = mongoose.createConnection(MONGO_URL_REPL, {
 
 // MONGO MODELS
 // should edit the viewer events
-const VIEWER_EVENTS = primary.model("ViewerEvents", {
-  team: String,
-  active: Boolean,
-})
+const VIEWER_EVENTS = primary.model(
+  "ViewerEvents",
+  {
+    team: String,
+    active: Boolean,
+  },
+  "viewerEvents"
+)
 
 // should track the teams, players, and Viewer settings
 const TEAM_REPL = repl.model(
