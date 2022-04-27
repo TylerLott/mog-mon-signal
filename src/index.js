@@ -4,13 +4,13 @@ import redis from "redis"
 import mongoose from "mongoose"
 
 let PORT = 80
-let REDIS_PATH = "redis://54.277.184.239:6379"
+let REDIS_PATH = "redis://54.227.184.239:6379"
 let MONGO_URL_PRIMARY = "mongodb://172.31.91.101:27017/monday"
 let MONGO_URL_REPL = "mongodb://172.31.91.101:27018/monday"
 
 if (process.env.NODE_ENV !== "production") {
   PORT = 8080
-  REDIS_PATH = "redis://54.277.184.239:6379"
+  REDIS_PATH = "redis://54.227.184.239:6379"
   MONGO_URL_PRIMARY = "mongodb://3.82.232.239:27017/monday"
   MONGO_URL_REPL = "mongodb://3.82.232.239:27018/monday"
 }
