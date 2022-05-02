@@ -1,5 +1,4 @@
 import express from "express"
-import { promisify } from "util"
 import redis from "redis"
 import mongoose from "mongoose"
 
@@ -15,7 +14,7 @@ if (process.env.NODE_ENV !== "production") {
   MONGO_URL_REPL = "mongodb://3.82.232.239:27018/monday"
 }
 
-// MONGO
+// MONGO CONNECTION
 let primary = mongoose.createConnection(MONGO_URL_PRIMARY, {
   useNewUrlParser: true,
 })
